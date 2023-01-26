@@ -60,8 +60,6 @@ public class RigidCatenary extends TileEntityPartsRenderer<ModelSetRail> {
 		double y = rp[0].posY - rp[0].blockY - 0.0625;
 		double z = rp[0].posZ - rp[0].blockZ;
 		List<ResourceStateRail> subRails = tileEntity.subRails;
-		float cant;
-		float bracketMoveX, bracketMoveY;
 
 		float cwHeight = getCWHeight(subRails);  //height of contact wire
 		int ot = getOt(subRails);             //overlap type, 0=no overlap, 1=overlap, 2=insulated overlap
@@ -71,10 +69,8 @@ public class RigidCatenary extends TileEntityPartsRenderer<ModelSetRail> {
 		float oEnd = getOEnd(subRails);         //catenary offset end
 		int bd = 15;            //bracket distance
 		boolean hasCant = true;
-		float cantMoveX = 0.0F;
-		if (hasCant) {
-
-		}
+		float cant;
+		float bracketMoveX=0, bracketMoveY=cwHeight;
 
 		float zigzagMove = oStart - oEnd;
 		float[] oArray = new float[max + 1];
@@ -172,54 +168,61 @@ public class RigidCatenary extends TileEntityPartsRenderer<ModelSetRail> {
 		}
 
 		//bracket
-		cant = rm.getRailRoll(max, max);
-		bracketMoveX = -cwHeight * NGTMath.sin(cant);
-		bracketMoveY = cwHeight * NGTMath.cos(cant);
+		if ((cant = rm.getRailRoll(max, max)) != 0.0F) {
+			bracketMoveX = -cwHeight * NGTMath.sin(cant);
+			bracketMoveY = cwHeight * NGTMath.cos(cant);
+		}
 		renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, max, max, false, cwHeight,
 				bracketMoveX, bracketMoveY, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket0);
-		cant = rm.getRailRoll(max, 0);
-		bracketMoveX = -cwHeight * NGTMath.sin(cant);
-		bracketMoveY = cwHeight * NGTMath.cos(cant);
+		if ((cant = rm.getRailRoll(max, 0)) != 0.0F) {
+			bracketMoveX = -cwHeight * NGTMath.sin(cant);
+			bracketMoveY = cwHeight * NGTMath.cos(cant);
+		}
 		renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, 0, 0, false, cwHeight,
 				bracketMoveX, bracketMoveY, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket0);
 		if (ot != 0) {
 
 			//normal
 			for (int i = endIndex - bd; i >= startIndex + 1; i -= bd) {
-				cant = rm.getRailRoll(max, i);
-				bracketMoveX = -cwHeight * NGTMath.sin(cant);
-				bracketMoveY = cwHeight * NGTMath.cos(cant);
+				if ((cant = rm.getRailRoll(max, i)) != 0.0F) {
+					bracketMoveX = -cwHeight * NGTMath.sin(cant);
+					bracketMoveY = cwHeight * NGTMath.cos(cant);
+				}
 				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, false, cwHeight,
 						bracketMoveX, bracketMoveY, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket);
 			}
 			for (int i = startIndex2 + bd; i <= endIndex2 - 1; i += bd) {
-				cant = rm.getRailRoll(max, i);
-				bracketMoveX = -cwHeight * NGTMath.sin(cant);
-				bracketMoveY = cwHeight * NGTMath.cos(cant);
+				if ((cant = rm.getRailRoll(max, i)) != 0.0F) {
+					bracketMoveX = -cwHeight * NGTMath.sin(cant);
+					bracketMoveY = cwHeight * NGTMath.cos(cant);
+				}
 				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, false, cwHeight,
 						bracketMoveX, bracketMoveY, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket);
 			}
 
 			//4 brackets for overlap
 			for (int i = startIndex2; i <= endIndex; i += 2) {
-				cant = rm.getRailRoll(max, i);
-				bracketMoveX = -cwHeight * NGTMath.sin(cant);
-				bracketMoveY = cwHeight * NGTMath.cos(cant);
+				if ((cant = rm.getRailRoll(max, i)) != 0.0F) {
+					bracketMoveX = -cwHeight * NGTMath.sin(cant);
+					bracketMoveY = cwHeight * NGTMath.cos(cant);
+				}
 				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, false, cwHeight,
 						(oArray2[i] + oArray[i]) / 2.0F + bracketMoveX, bracketMoveY, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, insb1);
 			}
 			for (int i = startIndex2; i <= endIndex; i += 2) {
-				cant = rm.getRailRoll(max, i);
-				bracketMoveX = -cwHeight * NGTMath.sin(cant);
-				bracketMoveY = cwHeight * NGTMath.cos(cant);
+				if ((cant = rm.getRailRoll(max, i)) != 0.0F) {
+					bracketMoveX = -cwHeight * NGTMath.sin(cant);
+					bracketMoveY = cwHeight * NGTMath.cos(cant);
+				}
 				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, false, cwHeight,
 						bracketMoveX, bracketMoveY, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket);
 			}
 		} else {
 			for (int i = startIndex + bd; i <= endIndex - 1; i += bd) {
-				cant = rm.getRailRoll(max, i);
-				bracketMoveX = -cwHeight * NGTMath.sin(cant);
-				bracketMoveY = cwHeight * NGTMath.cos(cant);
+				if ((cant = rm.getRailRoll(max, i)) != 0.0F) {
+					bracketMoveX = -cwHeight * NGTMath.sin(cant);
+					bracketMoveY = cwHeight * NGTMath.cos(cant);
+				}
 				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, false, cwHeight,
 						bracketMoveX, bracketMoveY, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket);
 			}
