@@ -15,9 +15,9 @@ import org.lwjgl.opengl.GL11;
 
 public class LibRenderRail extends TileEntityPartsRenderer<ModelSetRail> {
 
-	public static void renderRailMapStaticForNormRails(PartsRenderer renderer, TileEntityLargeRailCore tileEntity, RailMap rm, int max, int startIndex,
-	                                                   int endIndex, boolean enableCant, boolean shouldCantRaiseUp,
-	                                                   float[] translate, float[] rotate, float[] scale, Parts pArray) {
+	public static void renderRailMapStaticForNormRails(PartsRenderer renderer, TileEntityLargeRailCore tileEntity, RailMap rm,
+	                                                   int max, int startIndex, int endIndex, boolean enableCant,
+	                                                   float[] translate, float[] rotate, float[] scale, Parts... pArray) {
 		double[] origPos = rm.getRailPos(max, 0);
 		double origHeight = rm.getRailHeight(max, 0);
 		int[] startPos = tileEntity.getStartPoint();
@@ -35,7 +35,7 @@ public class LibRenderRail extends TileEntityPartsRenderer<ModelSetRail> {
 			float yaw = rm.getRailYaw(max, i);
 			float pitch = rm.getRailPitch(max, i);
 			float cant = rm.getRailRoll(max, i);
-			float cantRaiseUp = (float) Math.abs(0.5F * Math.tan(cant * Math.PI / 180));
+			//float cantRaiseUp = (float) Math.abs(0.5F * Math.tan(cant * Math.PI / 180));
 
 			GLHelper.setBrightness(getBrightness(tileEntity.getWorld(),
 					NGTMath.floor(origPos[1] + x0), tileEntity.getPos().getY(), NGTMath.floor(origPos[0] + z0)));
@@ -44,9 +44,6 @@ public class LibRenderRail extends TileEntityPartsRenderer<ModelSetRail> {
 			GL11.glRotatef(yaw, 0.0F, 1.0F, 0.0F);
 			if (enableCant)
 				GL11.glRotatef(cant, 0.0F, 0.0F, 1.0F);
-			if (shouldCantRaiseUp)
-				GL11.glTranslatef(0.0F, cantRaiseUp, 0.0F);
-
 
 			if (translate[0] != 0.0F || translate[1] != 0.0F || translate[2] != 0.0F) {
 				GL11.glTranslatef(translate[0], translate[1], translate[2]);
@@ -61,10 +58,10 @@ public class LibRenderRail extends TileEntityPartsRenderer<ModelSetRail> {
 			}
 
 			GL11.glRotatef(-pitch, 1.0F, 0.0F, 0.0F);
-			/*for (int j = 0; j < pArray.length; ++j) {
+			for (int j = 0; j < pArray.length; ++j) {
 				pArray[j].render(renderer);
-			}*/
-			pArray.render(renderer);
+			}
+			//pArray.render(renderer);
 
 			GL11.glPopMatrix();
 		}

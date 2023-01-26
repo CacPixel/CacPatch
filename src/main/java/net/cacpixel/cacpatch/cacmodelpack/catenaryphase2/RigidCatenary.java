@@ -60,6 +60,8 @@ public class RigidCatenary extends TileEntityPartsRenderer<ModelSetRail> {
 		double y = rp[0].posY - rp[0].blockY - 0.0625;
 		double z = rp[0].posZ - rp[0].blockZ;
 		List<ResourceStateRail> subRails = tileEntity.subRails;
+		float cant;
+		float bracketMoveX, bracketMoveY;
 
 		float cwHeight = getCWHeight(subRails);  //height of contact wire
 		int ot = getOt(subRails);             //overlap type, 0=no overlap, 1=overlap, 2=insulated overlap
@@ -69,6 +71,10 @@ public class RigidCatenary extends TileEntityPartsRenderer<ModelSetRail> {
 		float oEnd = getOEnd(subRails);         //catenary offset end
 		int bd = 15;            //bracket distance
 		boolean hasCant = true;
+		float cantMoveX = 0.0F;
+		if (hasCant) {
+
+		}
 
 		float zigzagMove = oStart - oEnd;
 		float[] oArray = new float[max + 1];
@@ -113,80 +119,109 @@ public class RigidCatenary extends TileEntityPartsRenderer<ModelSetRail> {
 
 		if (ot == 0) {
 			for (int i = startIndex; i <= Math.floor(endIndex / 2.0F) - 1; i++) {
-				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, hasCant,
+				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, cwHeight,
 						oArray[i], cwHeight, 0.0F, 0.0F, angleHorizonal, 0.0F, 1.0F, 1.0F, 1.0F, rail0);
 			}
 			for (int i = (int) Math.floor(endIndex / 2.0F) + 1; i <= endIndex; i++) {
-				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, hasCant,
+				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, cwHeight,
 						oArray[i], cwHeight, 0.0F, 0.0F, angleHorizonal, 0.0F, 1.0F, 1.0F, 1.0F, rail0);
 			}
-			renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, (int) Math.floor(endIndex / 2.0F), (int) Math.floor(endIndex / 2.0F), hasCant, hasCant,
+			renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, (int) Math.floor(endIndex / 2.0F), (int) Math.floor(endIndex / 2.0F), hasCant, cwHeight,
 					oArray[(int) Math.floor(endIndex / 2.0F)], cwHeight, 0.0F, 0.0F, angleHorizonal, 0.0F, 1.0F, 1.0F, 1.0F, railgap);
 		} else {
 			for (int i = startIndex; i <= endIndex; i++) {
-				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, hasCant,
+				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, cwHeight,
 						oArray[i], cwHeight, 0.0F, 0.0F, angleHorizonal, 0.0F, 1.0F, 1.0F, 1.0F, rail0);
 			}
 			for (int i = startIndex2; i <= endIndex2; i++) {
-				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, hasCant,
+				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, cwHeight,
 						oArray2[i], cwHeight, 0.0F, 0.0F, angleHorizonal, 0.0F, 1.0F, 1.0F, 1.0F, rail0);
 			}
 		}
 
 		//ins0
 		if (ot != 0) {
-			renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, max, max, hasCant, hasCant,
+			renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, max, max, hasCant, cwHeight,
 					oArray2[max], cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, ins0);
-			renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, 0, 0, hasCant, hasCant,
+			renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, 0, 0, hasCant, cwHeight,
 					oArray[0], cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, ins0);
 			for (int i = endIndex - bd; i >= startIndex + 1; i -= bd) {
-				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, hasCant,
+				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, cwHeight,
 						oArray[i], cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, ins0);
 			}
 			for (int i = startIndex2 + bd; i <= endIndex2 - 1; i += bd) {
-				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, hasCant,
+				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, cwHeight,
 						oArray2[i], cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, ins0);
 			}
 			//4 insulators in overlap
 			for (int i = startIndex2; i <= endIndex; i += 4) {
-				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, hasCant,
+				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, cwHeight,
 						oArray[i], cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, ins1);
 			}
 			for (int i = startIndex2 + 2; i <= endIndex; i += 4) {
-				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, hasCant,
+				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, cwHeight,
 						oArray2[i], cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, ins1);
 			}
 		} else {
 			for (int i = startIndex; i <= endIndex - 1; i += bd) {
-				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, max, max, hasCant, hasCant,
+				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, max, max, hasCant, cwHeight,
 						oArray[max], cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, ins0);
-				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, hasCant,
+				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, cwHeight,
 						oArray[i], cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, ins0);
 			}
 		}
 
 		//bracket
-		renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, max, max, false, hasCant,
-				0.0F, cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket0);
-		renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, 0, 0, false, hasCant,
-				0.0F, cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket0);
+		cant = rm.getRailRoll(max, max);
+		bracketMoveX = -cwHeight * NGTMath.sin(cant);
+		bracketMoveY = cwHeight * NGTMath.cos(cant);
+		renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, max, max, false, cwHeight,
+				bracketMoveX, bracketMoveY, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket0);
+		cant = rm.getRailRoll(max, 0);
+		bracketMoveX = -cwHeight * NGTMath.sin(cant);
+		bracketMoveY = cwHeight * NGTMath.cos(cant);
+		renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, 0, 0, false, cwHeight,
+				bracketMoveX, bracketMoveY, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket0);
 		if (ot != 0) {
+
+			//normal
 			for (int i = endIndex - bd; i >= startIndex + 1; i -= bd) {
-				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, false, hasCant,
-						0.0F, cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket);
+				cant = rm.getRailRoll(max, i);
+				bracketMoveX = -cwHeight * NGTMath.sin(cant);
+				bracketMoveY = cwHeight * NGTMath.cos(cant);
+				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, false, cwHeight,
+						bracketMoveX, bracketMoveY, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket);
 			}
 			for (int i = startIndex2 + bd; i <= endIndex2 - 1; i += bd) {
-				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, false, hasCant,
-						0.0F, cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket);
+				cant = rm.getRailRoll(max, i);
+				bracketMoveX = -cwHeight * NGTMath.sin(cant);
+				bracketMoveY = cwHeight * NGTMath.cos(cant);
+				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, false, cwHeight,
+						bracketMoveX, bracketMoveY, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket);
+			}
+
+			//4 brackets for overlap
+			for (int i = startIndex2; i <= endIndex; i += 2) {
+				cant = rm.getRailRoll(max, i);
+				bracketMoveX = -cwHeight * NGTMath.sin(cant);
+				bracketMoveY = cwHeight * NGTMath.cos(cant);
+				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, false, cwHeight,
+						(oArray2[i] + oArray[i]) / 2.0F + bracketMoveX, bracketMoveY, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, insb1);
 			}
 			for (int i = startIndex2; i <= endIndex; i += 2) {
-				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, false, hasCant,
-						0.0F, cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, insb1);
+				cant = rm.getRailRoll(max, i);
+				bracketMoveX = -cwHeight * NGTMath.sin(cant);
+				bracketMoveY = cwHeight * NGTMath.cos(cant);
+				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, false, cwHeight,
+						bracketMoveX, bracketMoveY, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket);
 			}
 		} else {
-			for (int i = startIndex; i <= endIndex - 1; i += bd) {
-				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, false, hasCant,
-						0.0F, cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket);
+			for (int i = startIndex + bd; i <= endIndex - 1; i += bd) {
+				cant = rm.getRailRoll(max, i);
+				bracketMoveX = -cwHeight * NGTMath.sin(cant);
+				bracketMoveY = cwHeight * NGTMath.cos(cant);
+				renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, false, cwHeight,
+						bracketMoveX, bracketMoveY, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, bracket);
 			}
 		}
 
@@ -198,28 +233,28 @@ public class RigidCatenary extends TileEntityPartsRenderer<ModelSetRail> {
             [oArray2[max], cwHeight, 0.0F], [0.0F, angleHorizonal, 0.0F], [1.0F, 1.0F, 1.0F], endEnd);
         */
 		if (ot != 0) {
-			renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, endIndex, endIndex, hasCant, hasCant,
+			renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, endIndex, endIndex, hasCant, cwHeight,
 					oArray[endIndex], cwHeight, 0.0F, 0.0F, angleHorizonal, 0.0F, 1.0F, 1.0F, 1.0F, endEnd);
-			renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, startIndex2, startIndex2, hasCant, hasCant,
+			renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, startIndex2, startIndex2, hasCant, cwHeight,
 					oArray2[startIndex2], cwHeight, 0.0F, 0.0F, angleHorizonal, 0.0F, 1.0F, 1.0F, 1.0F, endStart);
 		}
 
 		//gndWireCon
-		renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, 0, 0, hasCant, hasCant,
+		renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, 0, 0, hasCant, cwHeight,
 				oArray[0], cwHeight, 0.0F, 0.0F, angleHorizonal, 0.0F, 1.0F, 1.0F, 1.0F, gndWireCon);
 
 		//electricCon
 		if (ot == 1) {
 			for (int i = startIndex2 + 1; i <= endIndex; i += 2) {
 				if (oArray[i] <= oArray2[i]) {
-					renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, hasCant,
+					renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, cwHeight,
 							oArray[i], cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, electricCon1);
-					renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, hasCant,
+					renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, cwHeight,
 							oArray2[i], cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, electricCon2);
 				} else {
-					renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, hasCant,
+					renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, cwHeight,
 							oArray2[i], cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, electricCon1);
-					renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, hasCant,
+					renderRailMapStaticForNormRails(renderer, tileEntity, rm, max, i, i, hasCant, cwHeight,
 							oArray[i], cwHeight, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, electricCon2);
 				}
 			}
@@ -229,7 +264,7 @@ public class RigidCatenary extends TileEntityPartsRenderer<ModelSetRail> {
 
 
 	public static void renderRailMapStaticForNormRails(PartsRenderer renderer, TileEntityLargeRailCore tileEntity, RailMap rm, int max,
-	                                                   int startIndex, int endIndex, boolean enableCant, boolean shouldCantRaiseUp,
+	                                                   int startIndex, int endIndex, boolean enableCant, float cwHeight,
 	                                                   float translateX, float translateY, float translateZ,
 	                                                   float rotateX, float rotateY, float rotateZ,
 	                                                   float scaleX, float scaleY, float scaleZ,
@@ -251,7 +286,6 @@ public class RigidCatenary extends TileEntityPartsRenderer<ModelSetRail> {
 			float yaw = rm.getRailYaw(max, i);
 			float pitch = rm.getRailPitch(max, i);
 			float cant = rm.getRailRoll(max, i);
-			float cantRaiseUp = (float) Math.abs(0.5F * Math.tan(cant * Math.PI / 180));
 
 			GLHelper.setBrightness(LibRenderRail.getBrightness(tileEntity.getWorld(),
 					NGTMath.floor(origPos[1] + x0), tileEntity.getPos().getY(), NGTMath.floor(origPos[0] + z0)));
@@ -260,9 +294,6 @@ public class RigidCatenary extends TileEntityPartsRenderer<ModelSetRail> {
 			GL11.glRotatef(yaw, 0.0F, 1.0F, 0.0F);
 			if (enableCant)
 				GL11.glRotatef(cant, 0.0F, 0.0F, 1.0F);
-			if (shouldCantRaiseUp)
-				GL11.glTranslatef(0.0F, cantRaiseUp, 0.0F);
-
 
 			if (translateX != 0.0F || translateY != 0.0F || translateZ != 0.0F) {
 				GL11.glTranslatef(translateX, translateY, translateZ);
