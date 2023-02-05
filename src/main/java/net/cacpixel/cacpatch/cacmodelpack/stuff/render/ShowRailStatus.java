@@ -63,6 +63,8 @@ public class ShowRailStatus {
 		//tileEntity.addSubRail(subRails.get(subRails.size() - 1));
 		//tileEntity.updateResourceState();
 		tileEntity.subRails.remove(subRails.get(subRails.size() - 1));
+		//RTMCore.NETWORK_WRAPPER.sendToAll(new PacketLargeRailCore(tileEntity, tileEntity.getPacketType()));
+		//RTMCore.NETWORK_WRAPPER.sendToServer(new PacketLargeRailCore(tileEntity, tileEntity.getPacketType()));
 		tileEntity.sendPacket();
 	}
 
